@@ -1,0 +1,293 @@
+1.服务器
+	1)C(client)/S(server)架构
+		优点：性能较高，界面酷炫
+		缺点：需要及时更新软件，否则可能无法使用;不同设备访问
+
+	2)B(browser)/S(server)架构
+		优点：更新简洁，多设备同步
+		缺点：性能较低，浏览器兼容问题
+
+	3)服务器类型
+		服务器分类
+			按类型分:
+			文件服务器、数据库服务器、邮件服务器、Web 服务器等；
+			按软件分:
+			Apache服务器、Nginx 服务器、IIS服务器、Tomcat服务器、Node服务器等。
+			按操作系统分:
+			Linux服务器、Windows服务器等
+
+	4)HTTP协议
+
+	5)HTTP服务器
+
+	6)数据库
+
+2.HTTP服务器搭建(wampserver)
+	1)install
+		双击提供的安装包
+		点击Next
+		选择安装路径,注意:不要使用中文路径.建议使用跟图片一致的路径
+		如果担心安装完成后找不到wamp可以将两个方框全部勾选,点击next继续安装
+		点击install开始安装
+		安装完毕以后点击finish即可启动wamp
+		启动完成能够在任务栏的右下角看到显示绿色图标即表示安装成功
+
+	2)wamp异常解决方法
+		1.检查是否开启了服务:保证Apache,MySQL的服务都是启动状态即可
+		2.检查是否开启了微软自带的IIS服务:首先打开控制面板,保证动态图最后选中的Internet Information Services没有被勾选即可
+		3.修改端口号:在httpd.conf中搜索 listen
+			Listen 80
+	    改为 listen 8080
+	    注这里可以改为任意的端口,修改完毕之后, 保存并重启wamp	    访问时在ip地址之后添加:8080 端口号即可
+	    如 192.168.18.125:8080
+	  4.终极解决:卸载-删除文件夹(wamp安装的文件夹)-重装
+
+	3)配置局域网访问
+	 	1.关闭防火墙
+	 	2.修改httpd.conf文件：因为Apache的配置默认不允许外部访问,我们需要修改配置，找到D:\wamp\bin\apache\Apache2.2.21\conf文件，使用文本编辑工具打开,通过搜索功能找到onlineoffline tag - don't remove这句话 ``` 将在234行附近的 Allow from 127.0.0.1 替换为 Allow from all
+	 	保存,然后重启wamp`的所有服务即可
+
+  4)配置网站根目录
+   	1.找到WAMP的安装目录:D:\wamp
+		2.找到Apache的配置文件 D:\wamp\bin\apache\Apache2.2.21\conf
+		3.修改http.conf文件 使用文本编辑工具打开httpd.conf文件,搜索documentRoot,如果是初次安装,应该分别在178行,205行,修改完毕以后记得保存ctrl+s,然后重启wamp
+
+3.PHP基础
+	详情参考文件hp.php
+	php中的header
+		设置文本编码:
+		设置编码格式为:utf-8
+		header('content-type:text/html; charset= utf-8');
+
+		设置页面跳转:
+		设置跳转到百度首页
+		header('location:http://www.baidu.com');
+
+		设置页面间隔刷新:
+		header('refresh:3; url=http://www.xiaomi.com');
+
+	php表单
+		通过$_GET,$_POST,$_FILES对象获取用户传过来的数据，详情参考get,post,uploadfile文件夹
+
+4.网络传输协议
+	1)常见协议
+		http,https超文本传输协议
+		ftp文件传输协议
+		smtp邮件传输协议
+
+	2)http协议
+		由从客户端发出的request请求和从服务端返回的响应response组成
+
+		请求/请求报文：
+			请求行：请求方法(get/post) 请求url http协议版本
+			请求头，一系列设置关于浏览器和服务器的信息
+			请求主体：提交给服务器的数据
+
+		响应/响应报文：
+			状态行：报文协议及版本 状态码及其描述
+			响应头：一系列关于响应的信息
+			响应主体：返回给客户端的数据
+
+5.Ajax基本概念及使用
+	1)同步和异步
+		同步：必须等待前面的任务完成,才能继续后面的任务
+		异步：不受当前任务的影响
+
+	2)Ajax
+		Asynchronous Javascript And XML（异步JavaScript和XML）,并不是凭空出现的新技术,而是对于现有技术的结合:核心是js对象XMLHttpRequest
+		ajax使用的依然是http请求
+			五步曲:
+				1.建立XMLHTTPRequest对象
+
+				2.注册回调函数
+				当服务器回应我们了,我们想要执行什么逻辑
+
+				3.使用open方法设置和服务器端交互的基本信息
+				设置提交的网址,数据,post提交的一些额外内容
+
+				4.设置发送的数据，开始和服务器端交互
+				发送数据
+
+				5.更新界面
+				在注册的回调函数中,获取返回的数据,更新界面
+
+	3)XMLHttpRequest对象
+		创建XMLHttpRequest对象
+		新版本浏览器: var xml = new XMLHttpRequest();
+		(ie5,ie6): var xml = new ActiveXObject('Microsoft.XMLHTTP');
+
+		发送请求
+		open(method,url,async): method-get/post,url-请求地址,async-(true/false)是否异步
+
+		send([string]): string仅限post请求
+
+		post请求需要设置请求头：xml.setRequestHeader('content-type','application/x-www-form-urlencoded');
+
+		onreadystatechange事件
+		onreadystatechange:
+		存储函数，每当readyState状态改变时触发此函数
+		readyState:
+		存有 XMLHttpRequest 的状态。从 0 到 4 发生变化。
+			0: 请求未初始化
+			1: 服务器连接已建立
+			2: 请求已接收
+			3: 请求处理中
+			4: 请求已完成，且响应已就绪
+		status:
+			200: 'ok'
+			404: not found
+		response content:
+			responseText
+			responseXML
+
+6.ajax传输数据
+	1)传输XML
+		XML:可扩展标记语言EXtensible Markup Language,是纯文本 XML是纯文本,这点跟HTML很像,所以我们可以用任何的文本编辑软件去打开编辑它
+		XML语法：
+			XML声明
+			第一行是XML的声明,指定XML版本(1.0)以及使用的编码(UTF-8万国码)
+			<?xml version="1.0" encoding="UTF-8"?>
+			
+			自定义标签 XML中没有默认的标签,所有的标签都是我们定义者自定义的
+			<!-- 下列标签都是被允许的 --> 
+			<fox></fox>
+			<name></name>
+
+			双标签
+			XML中没有但标签,都是双标签
+			<haha>标签内</haha>
+
+			根节点 
+			XML中必须有一个根节点,所有的子节点都放置在根节点下
+			<root>
+			  <name></name>
+			</root>
+
+			XML属性 
+			跟HTML一样,XML的标签里面也能够添加属性type = 'text',但是不建议这样用,而是使用标签的方式来表述内容(下半部分代码)
+			<!-- 使用属性配合标签表述信息 --> 
+			<person sex="female">
+			  <firstname>Anna</firstname>
+			  <lastname>Smith</lastname>
+			</person> 
+			<!-- 使用标签来表述信息 --> 
+			<person>
+			  <sex>female</sex>
+			  <firstname>Anna</firstname>
+			  <lastname>Smith</lastname>
+			</person>
+		XML解析：因为XML就是标签,所以直接用解析Dom元素的方法解析即可
+
+	2)传输json
+		json语法
+		JSON(JavaScript Object Notation),是ECMAScript的子集,作用是进行数据的交换,而且由于语法更为简洁,网络传输,以及机器解析都更为迅速.
+		语法规则:
+			数据在键值对中
+			数据由逗号分隔
+			花括号保存对象
+			方括号保存数组
+			数据类型:
+
+		下列内容，无论键/值都是用双引号包起来
+			数字（整数或浮点数）
+			字符串（在双引号中）
+			逻辑值（true 或 false）
+			数组（在方括号中）
+			对象（在花括号中）
+			null
+
+		json解析
+			使用JSON对象
+			JSON.parse()方法:将JSON字符串转化为JavaScript对象
+			JSON.stringify()方法:将JavaScript对象,转化为JSON字符串
+			由于老式IE(8以下)浏览器中没有JSON对象,通过导入JSON2.js框架即可解决
+
+			使用eval()方法 
+			使用eval()方法需要注意的是,需要将内容使用()括号包裹起来
+
+			PHP中
+			json_decode()方法: 将`json`字符串转化为变量
+			json_encode()方法: 将变量转化为`json`字符串
+
+7.ajax工具封装(参见文件ajax_tool)
+
+8.jquery中的ajax(详情参考文档)
+	$.get();
+	$.post();
+	$('form').serialize();格式化表单数据
+	$.ajax({});
+
+9.引擎模板
+	导入引擎模板(js文件)
+	定义模板：<% %>定义逻辑表达式，即需要填充的数据
+		<script type="text" id = "templ01">
+        <ul>
+            <li><%=name %></li>
+            <li><%=age %></li>
+            <li><%=skill %></li>
+            <li><ul>favouriteFood
+                <% for(var i = 0 ;i < favouriteFood.length;i++) {%>
+                    <li><%=favouriteFood[i] %></li>
+                <% } %>
+                </ul>
+            </li>
+        </ul>
+    </script>
+	读取模板，传入数据：使用template(模板id,数据)，返回填充好的内容
+
+10.同源和跨域
+	1)同源
+		同源策略是浏览器的一种安全策略，所谓同源是指，域名，协议，端口完全相同。
+						URL											说明						是否允许通信
+		http://www.a.com/a.js
+																		同一域名下						允许
+		http://www.a.com/b.js			
+
+		http://www.a.com/lab/a.js
+																		同一域名下不同文件夹	允许
+		http://www.a.com/script/b.js	
+
+		http://www.a.com:8000/a.js
+																		同一域名，不同端口		不允许
+		http://www.a.com/b.js					
+
+		http://www.a.com/a.js
+																		同一域名，不同协议		不允许
+		https://www.a.com/b.js
+
+		http://www.a.com/a.js
+																		域名和域名对应ip			不允许
+		http://70.32.92.74/b.js
+
+		http://www.a.com/a.js
+																		主域相同，子域不同		不允许
+		http://script.a.com/b.js
+
+		http://www.a.com/a.js
+																		同一域名，不同二级域名（同上）不允许（cookie这种情况下也不允许访问）
+		http://a.com/b.js
+
+		http://www.cnblogs.com/a.js
+																		不同域名	不允许
+		http://www.a.com/b.js
+
+	2)跨域解决方案
+		顶级域名相同的可以通过domain.name来解决，即同时设置 domain.name = 顶级域名（如example.com）
+
+		document.domain + iframe
+
+		window.name + iframe
+
+		location.hash + iframe
+
+		window.postMessage()
+
+		JSONP
+		JSON with Padding其本质是利用了<script src=""></script>标签具有可跨域的特性，由服务端返回一个预先定义好的Javascript函数的调用，并且将服务器数据以该函数参数的形式传递过来，此方法需要前后端配合完成。
+		只能以GET方式请求
+		注意只能够通过get方法
+
+		jQuery的$.ajax()方法当中集成了JSONP的实现，可以非常方便的实现跨域数据的访问。
+			dataType: 'jsonp' 设置dataType值为jsonp即开启跨域访问
+			jsonp 可以指定服务端接收的参数的“key”值，默认为callback
+			jsonpCallback 可以指定相应的回调函数，默认自动生成

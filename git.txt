@@ -1,0 +1,296 @@
+1.Shell和vi
+	1)shell
+		在计算机科学中,Shell俗称壳,用来区别于Kernel(核),是指"提供使用者使用界面"的软件(命令解析器).它类似于DOS下的command和后来的cmd.exe.它接收用户命令,然后调用相应的应用程序.
+	
+	2)shell分类
+		a、图形界面shell
+		b、命令行shell
+	
+	3)bash
+		a、bash命令格式
+			命令[-options] [参数]
+		b、常见命令
+			pwd(Print Working Directory):查看当前目录
+			cd(Change Directory):切换目录,如cd /etc
+			ls(List):查看当前目录下内容,如ls -al
+			mkdir(Make Directory):创建目录,如mkdir blog
+			touch:创建文件,如touch index.html
+			cat:查看文件全部内容,如cat index.html
+			more/less:查看文件,如more /etc/passwd、less /etc/passwd
+			rm(remove):删除文件,如rm index.html、rm -rf  blog
+			rmdir(Remove Directory):删除文件夹,只能删除空文件夹,不常用
+			mv(move):移动文件或重命名,如mv index.html ./demo/index.html
+			cp(copy):复制文件,cp index.html ./demo/index.html
+			head:查看文件前几行,如head -5 index.html
+			tail:查看文件后几行 –n –f,如tail index.html、tail -f -n 5 index.html 
+			tab:自动补全,连按两次会将所有匹配内容显示出来
+			history:查看操作历史
+			> 和 >:重定向,如echo hello world! > README.md,>覆盖 >>追加
+			wget:下载,如wget https://nodejs.org/dist/v4.4.0/node-v4.4.0.tar.gz
+			tar:解压缩,如tar zxvf node-v4.4.0.tar.gz
+			curl:网络请求,如curl http://www.baidu.com
+			whoami:查看当前用户
+			|:管道符可以将多个命令连接使用,上一次(命令)的执行结果当成下一次(命令)的参数.
+			grep:匹配内容,一般结合管道符使用
+	
+	4)vi编辑器
+		vi编辑器提供了3种模式,分别是命令模式、插入模式、底行模式,每种模式下用户所能进行的操作是不一样的.
+			输入模式	<————>命令行模式<————>	末行模式
+		通过上图我们发现,输入模式是不能直接切换到末行模式的,必须要先切回到命令模式(按ESC键)
+		
+		使用vi编辑器(输入vi进入编辑器)
+			a) 打开/创建文件,vi 文件路径
+			b) 底行模式 :w保存,:w filenme另存为
+			c) 底行模式 :q退出
+			d) 底行模式 :wq保存并退出
+			e) 底行模式 :e!撤销更改,返回到上一次保存的状态
+			f) 底行模式 :q! 不保存强制退出
+			g) 底行模式 :set nu 设置行号
+			h) 命令模式 ZZ(大写)保存并退出
+			i) 命令模式 u辙销操作,可多次使用
+			j) 命令模式 dd删除当前行
+			k) 命令模式 yy复制当前行
+			l) 命令模式 p 粘贴内容
+			m) 命令模式 ctrl+f向前翻页
+			n) 命令模式 ctrl+b向后翻页
+			o) 命令模式 i进入编辑模式,当前光标处插入
+			p) 命令模式 a进入编辑模式,当前光标后插入
+			q) 命令模式 A进入编辑模式,光标移动到行尾
+			r) 命令模式 o进入编辑模式,当前行下面插入新行
+			s) 命令模式 O进入编辑模式,当前行上面插入新行
+	
+	5)SSH
+		SSH是一种网络协议,用于计算机之间的加密登录.
+		SSH只是一种协议,存在多种实现,既有商业实现,也有开源实现.本文针对的是OpenSSH,它是自由软件,应用非常广泛.
+		如果要在Windows系统中使用SSH,会用到另一种软件PuTTY,我们后面用到的Git客户也集成了SSH
+			格式：ssh user@host
+			user 代表真实存在的用户;host 代表要登录的远程计算机
+
+		常见有两种加密技术,分别是对称性加密和非对称性加密,SSH属于后者.
+			对称加密算法在加密和解密时使用的是同一个密钥；而非对称加密算法需要两个密钥来进行加密和解密,这两个秘钥分别是公开密钥(public key,简称公钥)和私有密钥(private key,简称私钥).
+
+		工作原理
+			公钥和私钥是成对出现,可以通过ssh-keygen -t rsa来创建,既可以通过密钥来加密数据,也可以通过私钥来加密数据,如果是以公钥进行的数据加密,只能与之相对应的私钥才可以解密,相反如果以私钥进行的数据加密,则只能与之对应的公钥才可以将数据进行解密,这样就可以提高信息传递的安全性.
+		
+		免密码登录
+			我们可以将本地机器上的公钥保存到特定的远程计算机上,这样当我们再次登录访问这台远程计算机时就可以实现免密码登录了.
+				1、ssh-keygen -t rsa会创建公钥和密钥(默认在用户目录/.ssh目录下)
+				2、ssh-copy-id user@host添加到对应远程主机的用户目录/.ssh目录下
+				3、也可以登录远程主机,进入到用户目录/.ssh目录下手动创建authorized_keys文件,并将自已的公钥粘入该文件.
+
+2.版本控制
+	版本控制(Version Control Systems)是一种记录一个或若干文件内容变化,以便将来查阅特定版本修订情况的系统.这个系统可以自动帮我们备份文件的每一次更改,并且可以非常方便的恢复到任意的备份(版本)状态.
+	1)分类
+		a.本地版本控制系统
+			功能单一,难以多人协同开发,目前很少用
+		b.集中式版本控制系统
+			通过单一的集中管理的服务器,保存所有文件的修订版本,协同工作的开发者都通过客户端连到这台服务器,取出最新的文件或者提交更新.其代表为SVN.
+			弊端是管理的服务器故障会导致数据丢失,更新数据严重依赖网络
+		c.分布式版本控制系统
+			不需要中央服务器,只需一台共享服务器,以便同步和更新数据;
+			每个协同开发者都有一个完整版本库,发生故障可以利用其他开发者的库进行恢复;
+			核心就是去中心化.
+
+3.Git
+	1)install
+		Window安装
+		http://git-scm.com/download/win下载Git客户端软件,和普通软件安装方式一样.
+		Linux安装
+		CentOS发行版：sudo yum install git
+		Ubuntu发行版：sudo apt-get install git
+		Mac安装
+		打开Terminal直接输入git命令,会自动提示,按提示引导安装即可.
+
+	2)Git工作原理
+		a.3种状态：已提交(committed)、已修改(modified)、已暂存(staged)
+		b.3个工作区域：
+			Git仓库(.git directory/Repository)：Git仓库目录是Git用来保存项目的元数据和对象数据库的地方. 这是Git中最重要的部分,从其它计算机克隆仓库时,拷贝的就是这里的数据.
+			
+			工作目录(Working Directory)：工作目录是对项目的某个版本独立提取出来的内容.这些从Git仓库的压缩数据库中提取出来的文件,放在磁盘上供你使用或修改.
+
+			暂存区域(Staging Area)：暂存区域是一个文件,保存了下次将提交的文件列表信息,一般在Git仓库目录中.有时候也被称作"索引"(Index),不过一般说法还是叫暂存区域.
+
+			基本的Git工作流程如下：
+				1、在工作目录中修改文件.
+				2、暂存文件,将文件的快照放入暂存区域.
+				3、提交文件,找到暂存区域的文件,将快照永久性存储到Git仓库目录.
+	
+	3)Git本地仓库：开发者开发设备中的仓库
+
+	4)Git准备工作
+		在项目根目录下右键,选择git bash here打开Git界面
+		1.配置用户,记录开发者信息,便于在版本控制纪录开发者的操作行为
+			git config --global user.name "your name"
+			git config --global user.emial "your email"
+			注: --global 配置当前用户所有仓库
+					--system 配置当前计算机上所有用户的所有仓库
+					配置用户只需执行一次,可以重复使用
+		
+		2.初始化仓库
+			我们如果想要利用git进行版本控制,需要将现有项目初始化为一个仓库,或者将一个已有的使用git进行版本控制的仓库克隆到本地.
+			a.git init
+				只是创建了一个名为.git的隐藏目录,这个目录就是存储我们历史版本的仓库,ls -al 可以查看.
+			b.git clone 仓库地址
+				假如公司已有项目用了Git,那我们就利用克隆
+			c.查看文件状态
+				git status
+				注：git会忽略空的目录
+			d.添加文件到暂存区
+				git add 文件名/文件路径 ("*"/-A代表所有)
+				git status 查看此时的状态,此时暂存区的文件被标记成了绿色,等待提交
+			e.撤销更改
+				git checkout 文件名
+				从暂存区还原到工作区
+			f.提交文件
+				git commit -m '备注信息'
+				git status 查看状态信息,发现文件已提交
+			g.查看提交日志(历史)
+				git log
+				commit 81b1e4fc2ae178caedf4575596377a80a6f1e73f
+				代表一次提交的唯一ID,一般称为SHA值.
+				注：按键盘Q键退出
+			h.再次检测仓库文件状态
+				git status
+			i.重新添加到暂存区然后提交
+				git add 文件名/文件路径
+				git commit -m 'message'
+			j.再次查看提交日志(历史)
+				git log
+			k.恢复上一次提交的状态
+				通过SHA值可以回到之前某一次的提交(时光倒流)
+				git reset --hard SHA值(一串16进制的数字,每次执行git commit -m 'message'后产生)
+		
+		3.Git分支：解决开发中同时开发多个功能的问题
+			在Git的使用过程中一次提交称为历史记录(版本),并且会生成一个唯一的字符串,这个串可以代表某一个历史版本(实际使用只取前面几位就可以),值得注意的是所有的提交(commit)实际上都是在分支(branch)的基础上进行的.
+			当我们在初始化仓库的时候(实际上是产生第1次提交时),Git会默认帮我们创建了一个master的分支,并且有指针(HEAD)指到了末端.指针(HEAD)用来标明当前处于哪个分支的哪个版本
+			a.创建分支
+				git branch 分支名
+				新的分支会在当前分支原有历史版本的结点上进行创建,其为子分支,新建的子分支会继承父分支的所有提交历史
+				git branch 
+				查看分支
+			b.切换分支
+				git checkout 分支名
+				此时HEAD现在又指向了分支名的末端
+			c.再次提交操作
+				git add 文件名
+				git commit -m 'massage'
+				这次的提交历史版本就会记录在(分支名)这个分支上了,并且HEAD伴随分支在移动.
+			d.再次切换到master时
+				git checkout master
+				当我们切换回master后,HEAD指向了master分支的末端,并且我们观察发现我们的文件内容还是原来的"模样".
+			e.继续之前的开发
+				当我们git checkout branchname时,HEAD会自动指向对应分支的末端,工作目录中的源码也会随之发生改变.这个时候我们就在这个分支上修复了这个BUG,而我们原来在master分支上的操作并未受到影响.
+				另外,这时的master分支并没有包含有另一个分支的修复
+			f.合并(融合)分支
+				git merge 子分支名
+				此时master会有两个父结点了,master便包含了子分支里的修复了
+			g.删除分支
+				git branch -d 子分支名
+				git branch -D 子分支名 强制删除
+
+	5)Git远程(共享)仓库
+		a.创建共享仓库
+			Git要求共享仓库是一个以.git结尾的目录.
+				mkdir repo.git 创建以.git结尾目录
+				cd repo.git 进入这个目录
+				git init --bare 
+			初始化一个共享仓库,也叫裸仓库,注意选项--bare
+			这样我们就建好了一个共享的仓库,但这时这个仓库是一个空的仓库,并且不允在这个仓库中进行任何修改.
+		b.向共享仓库共享(同步)内容
+			1.进入想要共享项目的目录
+			2.git push 共享仓库所在目录 master
+		c.从仓库中取出内容
+			1.新创建一个目录(模拟另一个开发着)
+			2.git clone 共享仓库目录 文件名/文件夹
+		d.通过共享产生的仓库向共享仓库共享内容
+			1.进入共享产生的仓库目录
+			2.git push 共享仓库目录 master
+		e.在另一个仓库中从共享仓库获取共享内容
+			git pull 共享仓库目录 master
+
+	6)gitHub & gitLab
+		github:
+			1.注册用户
+			2.创建新仓库
+				new reposity
+				Reposity name
+				Description
+				Reposity type:public
+				license: MIT ...
+			3.配置远程地址
+				git remote add origin git@gitgub.com:个人用户名/远程仓库目录
+				这里的origin就代表git@github.com:个人用户名/远程仓库目录,在.git/config中可以查看
+				git push origin master
+				合并两个不同项目时:
+				git pull origin master ----allow-unrelated-histories
+			4.生成密钥
+				git-keygen -t rsa
+				一直回车生成无密码公钥和私钥,保存在.ssh文件中
+	
+	7)git命令汇总
+		git config：配置本地仓库
+			常用git config --global user.name、git config --global user.email
+		git config --list：查看配置详情
+		git init：初始一个仓库,添加--bare可以初始化一个共享(裸)仓库
+		git status：可以查看当前仓库的状态
+		git add"文件"：将工作区中的文件添加到暂存区中,其中file可是一个单独的文件,也可以是一个目录、"*"、-A
+		git commit -m '备注信息'：将暂存区的文件,提交到本地仓库
+		git log：可以查看本地仓库的提交历史
+		git branch：查看分支
+		git branch "分支名称"：创建一个新的分支
+		git checkout "分支名称"：切换分支
+		git checkout -b deeveloper：创建并切换到developer分支
+		git merge "分支名称"：合并分支
+		git branch -d "分支名称"：删除分支
+		git clone "仓库地址"：获取已有仓库的副本
+		git push origin "本地分支名称: 远程分支名称"：将本地分支推送至远程仓库,
+		git push origin hotfix：(通常的写法)相当于
+		git push origin hotfix:hotfix
+		git push origin hotfix:newfeature
+		本地仓库分支名称和远程仓库分支名称一样的情况下可以简写成一个,即git push "仓库地址" "分支名称",如果远程仓库没有对应分支,将会自动创建
+		git remote add "主机名称" "远程仓库地址": 添加远程主机,即给远程主机起个别名,方便使用
+		git remote : 可以查看已添加的远程主机
+		git remote show "主机名称": 可以查看远程主机的信息
+	
+	8)git使用规范
+		1、不要有太多的树杈(子分支)
+		2、要有一个"稳定分支",即master分支不要轻意被修改
+		3、要有一个开发分支(developer),保证master分支的稳定性
+		4、所有的功能分支(feature)从developer创建
+		5、所有功能开发完成后新建发布分支(release)
+
+	9)Git高级
+		1.gitignore 忽略文件
+			在项目根目录下创建一个.gitignore文件,可以将不希望提交的罗列在这个文件里,如项目的配置文件、node_modules等
+		2.比较差异
+			当内容被修改,我们无法确定修改哪些内容时,可以通过git diff来进行差异比较。
+				git difftool 比较的是工作区和暂存的差异
+				git difftool "SHA" 比较与特定提交的差异
+				git difftool "SHA""SHA" 比较某两次提交的差异
+				git difftool 分支名称 比较与某个分支的差异
+		3.回滚(撤销)操作
+			HEAD 默认指向当前分支的"末端",即最后的一次提交,但是我们通过git reset 可以改变HEAD的指向。
+			看情况解释(稍微复杂一些,理解就好)
+				1、git reset
+				--hard 工作区会变、历史(HEAD)会变, 暂存区也变
+				--soft 只会变历史(HEAD)
+				--mixed(默认是这个选项)历史(HEAD)会变、暂存区也变,工作区不变
+				2、git checkout
+				git checkout SHA -- "某个文件",代表只是从SHA这个版中取出特定的文件,
+				和git reset 是有区别的,reset 重写了历史,checkout 则没有。
+		4.更新仓库
+			在项目开发过程中,经常性的会遇到远程(共享)仓库和本地仓库不一致,我们可以通过git fetch 命令来更新本地仓库,使本地仓库和远程(共享)仓库保持一致。
+				git fetch  "远程主机"
+				或者
+				git fetch "远程主机" "分支名称"
+			我们要注意的是,利用git fetch 获取的更新会保存在本地仓库中,但是并没有体现到我们的工作目录中,需要我们再次利用git merge 来将对应的分支合并(融合)到特定分支。如下
+				git pull origin 某个分支, 此操作相当于下面两步
+					git fetch 
+					git merge origin/某个分支
+				问题：如何查看远程主机上总共有多少个分支？
+					git branch -a 便可以查看所有(本地+远程仓库)分支了
+
+		5.删除远程分支
+			删除远程分支 git push origin --delete 分支名称
+			删除(替换)远程分支 git push origin :分支名称
+

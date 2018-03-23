@@ -1,0 +1,590 @@
+1.基础标签
+	hyperText markup language 超文本标记语言
+
+	<html lang='en'>根标签 lang='en':告诉搜索引擎爬虫，我们的网站是关于什么内容的
+	<head>
+		<meta charset='utf-8'>gb2312,gbk,unicode
+		<meta content = '' name = 'keywords'>
+		<meta content = '' name = 'description'>
+		<title><title>
+	</head>
+	<body>
+		H1-h6
+		p
+		strong
+		em
+		del
+		address
+		div
+		span
+	</body>
+	</html>
+
+2.高级标签
+	编码：
+		空格文本：&nbsp;
+		小于号：&lt;
+		大于号：&gt;
+
+	br换行标签
+
+	hr水平线标签
+
+	ol li 有序列表
+	type:决定排列序号类型
+	reversed = 'reversed':倒序排列
+	start:决定起始序号，只需写阿拉伯数字就可以了
+
+	ul li 无序列表
+	常用于导航栏
+	只有一个属性：type
+
+	dl dt dd 定义列表
+	<dl>
+	<dt></dt> definition title 定义标题
+	<dd></dd> definition description 定义描述
+	</dl>
+	常用于网站尾部的相关信息
+	图文混排
+	推荐一个dt对应一个dd
+
+	<img src=''> 
+	src:网上的url，本地的绝对路径，本地的相对路径
+	alt:图片占位符
+	title：图片提示符
+
+	a标签(anchor)
+	href:hyperText reference 超链接,用于页面之间跳转
+	target:控制如何跳转
+	 	_blank:在新页面打开
+	 	_self:在当前页跳转，默认值
+	 title:内容提示符
+	锚点:
+		<div id='div1'></div>
+		<div id='div2'></div>
+		<a href='#div1'></a>
+		<a href='http://www.xxx.com#div2'></a>跳转到某个页面的指定位置
+	打电话:<a href='tel:13800138000'></a>
+	发邮件:<a href='mailto:xxx@163.com'></a>
+	协议限定符:<a href='javascript:'></a>
+
+	base标签
+	<base target='_target'>专门用来统一指定当前网页中所有链接跳转，放在head标签中
+
+	假链接
+		<a href='#'></a>会跳转至顶部
+		<a href='javascript:'></a>
+
+	form标签
+	<form method='get/post' action='#'>
+		<label for='account'>username</label>
+		<input type='text' id='account' name='username' value='文本框提示'>文本框
+		<input type='password' name='password'>密码框
+		<input type='submit' value=''>提交框
+
+		<input type='radio' checked='checked' name='male' value='a'>单选框
+		<input type='radio' name='male' value='b'>单选框
+		<input type='radio' name='male' value='c'>单选框
+
+		<input type='checkbox' checked='checked' name='fruit' value='a'>多选框
+		<input type='checkbox' name='fruit' value='b'>多选框
+		<input type='checkbox' name='fruit' value='c'>多选框
+		单选框和多选框的name值要一致
+		下拉列表标签
+		<select name=''>
+			<optgroup label='分组名称'>
+				<option value='' selected='selected'><option>
+				<option value=''><option>
+				<option value=''><option>
+			</optgroup>
+			<optgroup label='分组名称'>
+				<option value='' selected='selected'><option>
+				<option value=''><option>
+				<option value=''><option>
+			</optgroup>
+		</select>
+	</form>
+	另外input标签中的type类型中还有mail,url,number,date,color，reset
+
+	textarea文本域标签
+	定义一个多行输入框,通过cols和rows指定宽高，默认情况下可以右下角手动拉伸
+	<textarea cols='' rows='' style='resize: none;'><textarea>
+
+	行级元素：内容决定元素所占位置，不可以通过css改变宽高
+			  span strong em a 
+	块级元素（容器级）：独占一行，可以通过css改变宽高
+			  div p h1-h6 ul li form
+	行内块级元素：内容决定大小，可以改宽高
+				  img		  
+	行级元素只能嵌套行级元素
+	块级元素可以嵌套任何元素，例外：p标签不能嵌套块级元素，a标签不能嵌套a标签
+	
+3.css引入
+	cascading style sheet 层叠样式表
+	1)行间样式:<div style='color:;'></div>
+	2)页面级样式:<style></style>
+	3)外部样式:<link ref='stylesheet' type='text/css' href='#'>
+		页面级样式和外部样式，谁在后面谁优先
+
+	css三大属性：
+	继承性：只有以color/font-/text-/line开头的属性才可以继承
+	例外：a标签的文字颜色和下划线不能继承，h标签的文字大小不能继承
+	一般用于设置网页的一些共性信息
+
+	层叠性：css处理冲突的一种能力，多个选择器选中同一个标签设置同样的属性，后面的会覆盖前面的
+
+	优先性：决定层叠性的优先级
+	优先级判断方式：是否直接选中;是否是相同选择器;不同选择器按权重计算
+
+4.css选择器和权重
+	选择器					       权重
+	!important 					   infinity
+	行间样式					   1000(256进制的1000)
+	id选择器 					   100(256进制的100)
+	class选择器/属性选择器/伪类    10(256进制的10)
+	标签选择器/伪元素			   1(256进制的)
+	通配符 *					   0(256进制的0)
+
+	选择器从右向左查询
+	设置字体大小是设置高
+
+	复杂选择器:
+	父子选择器/派生选择器 div span {}
+	直接子元素选择器 div>span {}
+	并列选择器 div.class {}
+	分组选择器 div,span,em {}
+	相邻兄弟选择器 div + div
+	兄弟选择器 div~p
+	属性选择器 [attribute=value] 常用于区分input属性
+	css3的序选择器
+	同级别不分类型: :first-child :last-child :nth-child(n) :nth-last-child(n) :only-child
+	同级别同类型: :first-of-type :last-of-type :nth-of-type(n) :nth-last-of-type(n) :only-of-type
+	n可以是公式(2n+1)或者单词(odd/even)
+	css属性
+		font:swsf(style weight size family)
+		text-align:center/left/right
+		单行文本垂直居中:line-height等于height
+		text-indent:2em;缩进2个字符
+		text-decoration:none;
+		cursor:pointer
+		a:hover
+		display:inline block inline-block
+				带有inline属性的元素具有文字特性，会发生分割现象，产生间隔
+		开发经验：先css功能样式后html结构组合
+
+5.盒子模型
+	margin：margin上下合并取最大，左右相加
+	border
+	padding
+	width + height = content
+
+6.层模型
+	position:static(默认),relative,absolute,fixed
+	配合left,top,right,bottom使用
+	通用：子绝父相
+	元素设置了position：absolute/fixed后变成inline-block级元素
+
+	z-index: 默认情况下所有元素都有z-indenx属性，默认值为0.用于控制定位流元素的覆盖关系，因此只有设定position后才生效
+	默认情况下定位流元素会覆盖标准流的元素
+	默认情况下定位流元素后面编写的会覆盖前面编写的元素，同时如果设置了z-index属性，谁的z-index值大谁就在上面，如果设置了父元素的z-index属性，那么子元素的z-index会失效
+
+7.居中
+	div {
+		position: absolute;相对文档居中，fixed相对视窗居中
+		left:50%;
+		top:50%;
+		width:100px;
+		height:100px;
+		margin-top:-50px;
+		margin-left:-50px;
+	}
+
+8.两个经典bug
+	margin坍陷
+	解决：1)暴力解决：给父元素加border 2)触发bfc 
+	BFC：block formatting context
+	触发bfc：position:absolute;display:inline-block;float:left/right;overflow:hidden;
+
+	margin垂直合并:不解决
+
+9.float模型
+	设置了浮动的元素按顺序发生贴靠现象，并且转换成inline-block级元素;
+	浮动元素产生了浮动流，所有产生了浮动流的元素，块级元素看不到他们;
+	产生了bfc的元素和文本元素类属性（inline）以及文本都能看到浮动元素;
+
+	清除浮动: .clearfix::after {
+			content:'';
+			display: block;
+			clear: both;
+			}
+			*.clearfix {*zoom: 1;}
+	伪元素是行级元素(inline);块级元素才能清除浮动
+
+10.包裹浮动元素
+	字围现象
+
+11.文字溢出
+	单行文本溢出处理：
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	多行文本溢出处理：PC端后端处理手动打点，移动端css3处理
+
+12.背景图片处理
+	一个标签内背景图片和文字共存；
+		方法一：设置缩进宽度大于标签宽度，如width: 190px < text-indent: 200px,并且设置不换行white-space: nowrap,溢出部分设置overflow: hidden;
+		方法二：设置标签高度为0，上内边距等于背景图片的高度，padding-top: 背景图片高度，溢出部分设置overflow: hidden
+
+13.注释
+	html:<!-- -->
+	css:/* */
+	javascript:单行://多行:/* */
+
+练习题
+	1.请写出html基本结构
+		<!doctype html>
+		<html lang='zh'>
+		<head>
+		<meta charset='utf-8'>
+		<title>html<title>
+		</head>
+		<body></body>
+		</html>
+	2.请写出常见的行级元素和块级元素（每样至少4个）
+		行级元素：a span strong em 
+		块级元素：h1 p div ul
+	3.请设计一个以用户名密码提交表单
+		<form method='get' action=''>
+		<p>用户名：<input type='text' name='username'></p>
+		<p>密码：<input type='password' name='password'></p>
+		<p>性别：男<input type='radio' name='sex' value='male' checked='checked'>女<input type='radio' name='sex' value='female'></p>
+		<p><input type='submit' value='提交'></p>
+		</form>
+	4.请详细说明position定位的值有什么区别
+		static:静态定位，默认值
+		relative:相对定位，保留元素原来的位置
+		absolute:绝对定位，脱离文档流
+		fixed:固定定位，脱离文档流
+	5.font-size：20px;设置的是字体的宽还是高
+		高
+	6.编写css让一个已知宽高的div，在pc/手机端水平居中。
+		div {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 100px;
+			height: 100px;
+			margin-left: -50px;
+			margin-top: -50px;
+		}
+	7.内核为webkit的浏览器包括：
+		safari chrome 新版本Opera
+
+	8.通常html标签都是需要特别的书写来闭合，例如<a>标签的闭合</a>,那么下列不需要闭合的是：a,b,d
+		a.<br> b.<hr> c.<command> d.<meta>
+	9.使用语义化标签及css完成以下布局，考虑模块化和扩展性，容器默认宽度320px，右侧，图片100*100，hover时容器宽度变成400px：
+		{最多两行20px #333,顶部对齐图片，底部间距8px}
+		{12px #666 行高1.2}
+		<div>
+		<img src='#'>
+		<p class='p1'>{最多两行20px #333,顶部对齐图片，底部间距8px}</p>
+		<p class='p2'>使用语义化标签及css完成以下布局，考虑模块化和扩展性，容器默认宽度320px，右侧</p>
+		</div>
+		div {
+  			width: 320px;
+  			background-color: #ccc;
+		}
+		div:hover {
+  			width: 400px;
+		}
+		div::after {
+			content: '';
+			display: block;
+			clear: both;
+			zoom: 1;
+		}
+		img {
+  			width: 100px;
+  			height: 100px;
+  			float: left;
+  			margin-right: 7px;
+		}
+		.p1 {
+  			height: 40px;
+  			font-size: 20px;
+  			line-height: 20px;
+  			color: #333;
+  			overflow: hidden;
+  			margin-bottom: 8px;
+		}
+		.p2 {
+  			font-size: 12px;
+  			color: #666;
+  			line-height: 1.2em;
+		}
+	10.请使用至少两种方案实现左中右三栏布局，左栏定宽100px，右栏定宽100px，中栏不定宽，三栏宽度加起来正好是100%。
+		<div class='left'>left</div>
+		<div class='right'>right</div>
+		<div class='center'>center</div>
+		.left {
+			float: left;
+			width: 100px;
+			background-color: #f00;
+		}
+		.right {
+			float: right;
+			width: 100px;
+			background-color: #f00;
+		}
+		.center {
+			margin-left: 100px;
+			margin-right: 100px;
+			background-color: #0f0;
+		}
+
+		<div class='left'>left</div>
+		<div class='right'>right</div>
+		<div class='center'>center</div>
+		.left {
+			position: absolute;
+			left: 0;
+			/*top: 0;*/
+			width: 100px;
+			background-color: #f00;
+		}
+		.right {
+			position: absolute;
+			right: 0;
+			/*top: 0;*/
+			width: 100px;
+			background-color: #f00;
+		}
+		.center {
+			margin-left: 100px;
+			margin-right: 100px;
+			background-color: #0f0;
+		}
+
+补充知识点：
+1.什么是url(Uniform Resource Location统一资源定位符)
+	https://127.0.0.1:8090/index.html
+	https:// 网络协议类型(浏览器会自动补全)
+	127.0.0.1 服务器ip地址
+	:8090 服务器的端口号(浏览器会自动补全)
+	index.html 需要访问的资源名称
+
+2.http协议
+	Hypertext Transfer Protoco 超文本传输协议
+	用来规范和约束浏览器和服务器进行通讯
+
+3.DTD文档声明
+	<!DOCTYPE html>html 5版本，向下兼容
+	不区分大小写，不是一个标签
+	HTML 4.01 Strict
+	HTML 4.01 Transitional
+	HTML 4.01 Frameset
+
+4.datalist标签
+	<input type='text' list='li'>
+	<datalist id='li'>
+	<option></option>
+	<option></option>
+	</datalist>
+
+5.多媒体标签（HTML5标签）
+	1)video标签 播放视频
+		src:url,视频地址
+		自动播放属性autoplay：autoplay='autoplay'
+		controls:设置是否显示控制条
+		poster:url,视频播放前的视频占位符
+		loop:是否循环播放，多用于广告视频
+		preload:是否预加载，和autoplay相冲
+		muted:静音
+		width:视频宽
+		height:视频高
+		第一种格式：
+		<video src='url' controls='controls' poster='url' muted='muted'></video>
+		第二种格式：（解决浏览器适配问题）
+		<video>
+			<source src='xx.webm' type='video/webm'></source>
+			<source src='xx.mp4' type='video/mp4'></source>
+			<source src='xx.ogg' type='video/ogg'></source>
+		</video>
+
+	2)audio标签 播放音频
+		src:url,音频地址
+		自动播放属性autoplay：autoplay='autoplay'
+		controls:设置是否显示控制条
+		loop:是否循环播放
+		preload:是否预加载，和autoplay相冲
+		muted:静音
+		第一种格式：
+		<audio src='url' controls='controls' muted='muted'></audio>
+		第二种格式：（解决浏览器适配问题）
+		<audio>
+			<source src='xx.mp3' type='audio/mp3'></source>
+			<source src='xx.aac' type='audio/aac'></source>
+			<source src='xx.wax' type='audio/wax'></source>
+		</audio>
+
+	3)详情和概要标签
+		<details>
+			<summary>概要信息</summary>
+			详情信息
+		</details>
+
+6.marquee标签
+	不是w3c推荐的标签，作用类似跑马灯
+	behavior:设置滚动类型 slide/alternate
+	direction:改变滚动方向 left/right/up/down
+	scrollamount:设置滚动速度，值越大越快
+	loop:设置循环次数，默认值-1，无限滚动
+	<marquee direction='right'>
+		内容
+	</marquee>
+
+7.css字体属性
+	font-family：中文字体包含英文字体，英文字体不包含中文字体，因此可以写成font-family：英文字体 中文字体;
+	常见字体：宋体，黑体，微软雅黑;Times New Roman,Arial
+
+8.文本属性
+	文本装饰属性text-decoration: none/underline/line-through/overline
+	文本对齐属性text-align: left/right/center
+	文本缩进属性text-indent: 一般用em单位
+
+9.背景颜色和背景图片
+	background-color:英文单词/十六进制值/rgb()/rgba()
+
+	background-image: url();
+
+	background-repeat(背景图片平铺方式): repeat/repeat-x/repeat-y/no-repeat，用于背景图片重复，减小图片大小，提高访问速度
+
+	background-position(背景图片定位):坐标点(x,y)/left center right top center bottom自由组合，用于背景图片水平居中显示
+
+	backgrond-attachment(背景图片关联):scroll(默认值)/fixed
+
+	background-size: 设置背景图片大小((100% 100%)/cover/contain)
+
+	background-origin: padding-box(默认值)/content-box/border-box;设置背景图片显示范围
+
+	background-clip: border-box(默认值)/padding-box/content-box;设置背景绘制范围
+
+	多重背景：backgroud: url() no-repeat,url() no-repeat,...;先添加的会覆盖后添加的
+
+	background:背景颜色 背景图片 平铺方式 关联方式 定位方式
+
+	背景图片和插入图片的区别：
+		背景图片装饰用，不占用位置，插入图片占用位置
+		背景图片有定位属性，插入图片没有
+		插入图片语义比背景图片强
+
+10.精灵图
+	是一种图像合成技术
+	作用：可以减少请求次数，降低服务器压力，通常配合背景图片属性和背景点位属性使用
+
+11.清除浮动方式
+	1)设置浮动元素的父元素的高度
+
+	2)给后面的盒子添加clear属性,但是修改盒子的margin-top属性会失效
+
+	3)外墙法：在两个盒子之间添加一个块级元素，并设置clear:both;
+	第一个盒子不能使用margin-bottom，第二个盒子可以使用margin-top,通常设置这个块级元素的高度替换第二个盒子的margin-top;
+	不能撑起第一个盒子的高度
+
+	4)内墙法：在第一个盒子中所有子元素最后添加一个块级元素，并设置clear:both;
+	第一个盒子可以使用margin-bottom，第二个盒子可以使用margin-top;可以撑起第一个盒子的高度
+
+	5)设置伪元素:
+		.box::after{
+			content: "";
+			display: block;
+			clear: both;
+			visibility: hidden;
+			height: 0px;
+		}
+		*.box {*zoom: 1;}
+
+	6)设置浮动元素的父元素overflow: hidden,*zoom: 1;同时可以设置margin属性
+
+12.过渡模块
+	transition-property: 属性;控制需要过渡的属性
+	transition-duration: 时间;控制时长
+	transition-timing-function: linear/ease/ease-in/ease-out/ease-in-out;控制速度
+	transition-delay: 延迟时间;控制延迟时长
+	简写形式：
+	transition: property duration timing-function delay,property duration timing-function delay...;
+	transition: all duration;
+	eg:
+		{
+			transition-property: width,background-color;
+			transition-duration: 5s,2s;
+		}
+		:hover {
+			width: ;
+			background-color: ;
+		}
+
+13.2D转换模块
+	旋转：transform: rotate(度数/deg)
+	平移：transform: translate(坐标点/x,y)
+	缩放：transform: scale(倍数/1,2)
+	简写形式：
+	transform: rotate() translate() scale();
+	rotate()和translate()同时出现会改变坐标系
+	形变中心点：transform-origin: x y/百分比/英文单词(center left right top bottom)
+	旋转轴向：transform: rotateZ()/rotateX()/rotateY()
+	透视属性：perspective：
+	xxpx;近大远小，必须添加到呈现近大远小效果的父元素上
+
+	盒子阴影和文字阴影：
+	box-shadow: 水平偏移 垂直偏移 模糊度 阴影扩展 阴影颜色(由盒子内容颜色决定) 内外阴影(inset/outset);
+	text-shadow: 水平偏移 垂直偏移 模糊度 阴影颜色(由文本内容颜色决定);
+	
+14.动画模块
+	{
+		animation-name: 自定义动画名称;
+		animation-duration: 动画时长;
+		animation-delay: 延迟时间;
+		animation-timing-function: 控制动画速度(ease ease-in ease-out linear ease-in-out steps()控制帧数);
+		animation-iteration-count:循环次数(infinite无限循环);
+		animation-direction:normal/alternate(控制往返);
+		animation-play-state:running/paused;控制动画状态
+		animation-fill-mode:none/forwards/backwards/both;指定动画等待和结束状态的样式
+	}
+	1)@keyframes 动画名称{
+		from{
+
+		}
+		to{
+
+		}
+	}
+	2)@keyframes 动画名称{
+		0%{
+
+		}
+		25%{
+
+		}
+		50%{
+
+		}
+		75%{
+
+		}
+		100%{
+
+		}
+	}
+
+	动画有三个状态：
+		等待状态
+		执行状态
+		结束状态
+
+	动画简写形式：	
+	animation: name duration timing-function delay iteration-count direction;
+
+15.3D转换模块
+	默认情况下所有元素都是呈现2d的，因此想要看到元素的3d效果，只要给元素的父元素添加transform-style: preserve-3d;就可以了(类似perspective属性)
+	transform-style: preserve-3d;
