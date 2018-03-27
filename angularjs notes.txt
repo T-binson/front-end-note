@@ -1,0 +1,702 @@
+1.Angularjs简介
+	1)特点
+		AngularJS是一个以数据和逻辑做为驱动(核心)的框架，最核心的是模块化、双向数据绑定、语义化标签、依赖注入
+	
+	2)安装：npm install angular
+	
+	3)MVC
+		MVC是一种开发模式，由模型（Model）、视图（View）、控制器（Controller）3部分构成，采用这种开发模式为合理组织代码提供了方便、降低了代码间的耦合度、功能结构清晰可见。
+		模型（Model）一般用来处理数据（读取/设置），一般指操作数据库。
+		视图（View）一般用来展示数据，比如通过HTML展示。
+		控制器（Controller）一般用做连接模型和视图的桥梁。
+
+2.模块化
+	1)定义应用
+		通过为任一HTML标签添加ng-app属性，可以指定一个应用，表示此标签所包裹的内容都属于应用（App）的一部分。
+			eg: <html lang='en' ng-app='App'>
+	
+	2)定义模块
+		AngularJS提供了一个全局对象angular，在此全局对象下存在若干的方法，其中angular.module()方法用来定义一个模块。
+			eg: let app = angular.module('app',[])
+	
+	3)定义控制器
+		控制器（Controller）作为连接模型（Model）和视图（View）的桥梁存在，所以当我们定义好了控制器以后也就定义好了模型和视图。
+			eg: 
+				app.controller('studentcontroller',['$scope' , function($scope) {
+					$scope = [
+						{name: 'Tom', sex: 'male', age: 27},
+						{name: 'Bomb', sex: 'female', age: 25}
+					];
+				}]);
+
+		模型（Model）数据是要展示到视图（View）上的，所以需要将控制器（Controller）关联到视图（View）上，通过为HTML标签添加ng-controller属性并赋值相应的控制器（Controller）的名称，就确立了关联关系。
+			<!--添加ng-controller属性，并赋值为相应的控制器名称-->
+			<table ng-controller='studentcontroller'>
+				<tr><th>name</th><th>gender</th><th>age</th></tr>
+				<tr ng-repeat='student in students'>
+					<td>{{student.name}}</td>
+					<td>{{student.sex}}</td>
+					<td>{{student.age}}</td>
+				</tr>
+			</table>
+
+3.指令
+	1)概念
+		指令就是AngularJS自定义的HTML属性或标签，这些指令都是以ng-做为前缀的，例如ng-app、ng-controller、ng-repeat等。
+	
+	2)内置指令
+		ng-app 指定应用根元素，至少有一个元素指定了此属性。
+		ng-controller 指定控制器
+		ng-show 控制元素是否显示，true显示、false不显示
+		ng-hide 控制元素是否隐藏，true隐藏、false不隐藏
+		ng-if 控制元素是否“存在”，true存在、false不存在
+		ng-src 增强图片路径
+		ng-href 增强地址
+		ng-class 控制类名
+		ng-include 引入模板
+		ng-disabled 表单禁用
+		ng-readonly 表单只读
+		ng-checked 单/复选框表单选中
+		ng-selected 下拉框表单选中
+
+	3)自定义指令
+		AngularJS允许根据实际业务需要自定义指令，通过angular全局对象下的directive方法实现。
+			eg:
+				let app = angular.module('app', []);
+				app.directive('tag', function() {
+					return {
+						restrict: 'EA',	//自定义指令的类型，有E,A,C,M
+						replace: true,	//是否替换原有标签
+						template: '<h1>hello Angularjs</h1>',	//指令模板
+						templateUrl: 'index.html'	//指令外部模板
+					}
+				});
+
+				<body ng-app="App">
+					<!-- <div tag></div> -->
+					<!-- 元素 -->
+					<!-- <tag></tag> -->
+					<!-- <div class="tag"></div> -->
+					<!-- directive:tag -->
+					<script src="./libs/angular.min.js"></script>
+					<script>
+					var App = angular.module('App', []);
+					// 通过模块实例对象的directive方法可以自定义指令
+					App.directive('tag', function () {
+						// 返回一个对象，这个对象就是自定义指令相关的内容
+							return {
+								// E element
+								// A attribute
+								// C class
+								// M mark replace 必须为true
+								restrict: 'ECMA',
+								// template: '<ul><li>首页</li><li>列表</li></ul>',
+								templateUrl: './list.html',
+								// replace: true
+							}
+						});
+					</script>
+				</body>
+
+4.数据绑定
+	AngularJS是以数据做为驱动的MVC框架，所有模型（Model）里的数据经由控制器（Controller）展示到视图（View）中。
+	所谓数据绑定指的就是将模型（Model）中的数据与相应的视图（View）进行关联，分为单向绑定和双向绑定两种方式。
+	1)单向绑定
+		单向数据绑定是指将模型（Model）数据，按着写好的视图（View）模板生成HTML标签，然后追加到DOM中显示，如之前所学的artTemplate 模板引擎的工作方式。
+
+	2)双向绑定
+		双向绑定则可以实现模型（Model）数据和视图（View）模板的双向传递，
+
+	3)相关指令
+		在AngularJS中通过“{{}}”和ng-bind指令来实现模型（Model）数据向视图模板（View）的绑定，模型数据通过一个内置服务$scope来提供，这个$scope是一个空对象，通过为这个对象添加属性或者方法便可以在相应的视图（View）模板里被访问。
+		注：“{{}}”是ng-bind的简写形式，其区别在于通过“{{}}”绑定数据时会有“闪烁”现象，添加ng-cloak也可以解决“闪烁”现象，通过ng-bind-template可以绑定多个数据。
+			eg:
+				<li>{{name}}</li>
+				<li ng-bind ='name'></li>
+				<li ng-cloak>{{name}}</li>
+				<li ng-bind-template ='{{name}}{{age}}'></li>
+		通过为表单元素添加ng-model指令实现视图（View）模板向模型（Model）数据的绑定。
+			eg:
+				<body ng-app="App">
+			    <div ng-controller="DemoController">
+			        <!-- 要实现数据从视图向模型传递需要借助于表单元素 -->
+			        <input type="text" ng-model="msg">
+			        <h4>{{msg}}</h4>
+			        <button ng-click="show()">显示</button>
+			    </div>
+			    <script src="./libs/angular.min.js"></script>
+			    <script>
+			    	var App = angular.module('App', []);
+			        App.controller('DemoController', ['$scope', function ($scope) {
+			            // $scope Model
+			            $scope.show = function () {
+			                alert($scope.msg);
+			            }
+			        }]);
+			    </script>
+				</body>
+		通过ng-init可以初始化模型（Model）也就是$scope。
+			eg:
+				<body>
+					<div ng-controller="DemoController" ng-init="name='itcast';age=10">
+						<h1>{{name}}</h1>
+						<h2>{{age}}</h2>
+					</div>
+					<script src="./libs/angular.min.js"></script>
+					<script>
+						var App = angular.module('App', []);
+						App.controller('DemoController', ['$scope', function ($scope){
+							// $scope.name = '';
+						}])
+					</script>
+				</body>
+		AngularJS对事件也进行了扩展，无需显式的获取DOM元素便可以添加事件，易用性变的更强。通过在原有事件名称基础上添加ng-做为前缀，然后以属性的形式添加到相应的HTML标签上即可。如ng-click、ng-dblclick、ng-blur等。
+			eg:
+					<div ng-controller="DemoController">
+						<ul>
+							<li><button ng-click="single()">单击</button></li>
+							<li><button ng-dblclick="double()">双击</button></li>
+							<li><input type="text" ng-blur="blur()"></li>
+							<li ng-mouseout="mouseout()">一些内容</li>
+						</ul>
+					</div>
+					<script src="./libs/angular.min.js"></script>
+					<script>
+						var App = angular.module('App', []);
+						App.controller('DemoController', ['$scope', function ($scope) {
+							$scope.single = function () {
+								alert('我被单击了');
+							};
+							$scope.double = function () {
+								alert('我被双击了');
+							};
+							$scope.blur = function () {
+								alert('失去焦点了');
+							};
+							$scope.mouseout = function () {
+								alert('鼠标移出了');
+							};
+						}]);
+					</script>
+		通过ng-repeat可以将数组或对象数据迭代到视图模板中，ng-switch、on、ng-switch-when可以对数据进行筛选。
+			eg:
+				<div ng-controller="DemoController">
+					<!-- <ul>
+						<li ng-repeat="(key, star) in stars">{{star.name}}{{star.age}}</li>
+					</ul> -->
+					<ul>
+						<li ng-repeat="item in items" ng-switch="item">
+							<span ng-switch-when="css">{{item}}</span>
+						</li>
+					</ul>
+				</div>
+				<script src="./libs/angular.min.js"></script>
+				<script>
+				var App = angular.module('App', []);
+				App.controller('DemoController', ['$scope', function ($scope) {
+					// $scope.stars = [
+					// 	{name: '刘德华', age: 60},
+					// 	{name: '周杰伦', age: 38},
+					// 	{name: '王力宏', age: 39}
+					// ]
+					$scope.items = ['html', 'css', 'js'];
+				}]);
+					// switch(name) {
+					// 	case '':
+					// }
+				</script>
+
+5.作用域
+	通常AngularJS中应用（App）是由若干个视图（View）组合成而成的，而视图（View）又都是HTML元素，并且HTML元素是可以互相嵌套的，另一方面视图都隶属于某个控制器（Controller），进而控制器之间也必然会产生嵌套关系。
+	每个控制器（Controller）又都对应一个模型（Model）也就是$scope对象，不同层级控制器（Controller）下的$scope便产生了作用域。
+		1)根作用域
+			一个AngularJS的应用（App）在启动时会自动创建一个根作用域$rootScope，这个根作用域在整个应用范围（ng-app所在标签以内）都是可以被访问到的.
+				eg:
+					<body ng-app="App" ng-init="name='顺治'">
+						<div class="parent" ng-controller="ParentController">
+							<h1>{{name}}</h1>
+							<div class="child" ng-controller="ChildController">
+								<h2>{{name}}</h2>
+							</div>
+						</div>
+						<script src="./libs/angular.min.js"></script>
+						<script>
+							var App = angular.module('App', []);
+							App.controller('ParentController', ['$scope', function ($scope) {
+								// $scope.name = '康熙';
+							}]);
+							App.controller('ChildController', ['$scope', function ($scope) {
+								$scope.name = '雍正';
+							}]);
+							var name = '小明';
+							// function () {
+							// 	var name = '小红';
+							// 	alert(name);
+							// 	function () {
+							// 		var name = '小黑';
+							// 	}
+							// }
+						</script>
+					</body>
+		
+		2)子作用域
+			通过ng-controller指令可以创建一个子作用域，新建的作用域可以访问其父作用域的数据。
+
+6.过滤器
+	在AngularJS中使用过滤器格式化展示数据，在“{{}}”中使用“|”来调用过滤器，使用“:”传递参数。
+	1)内置过滤器
+		1、currency 将数值格式化为货币格式
+		2、date 日期格式化，年（y）、月（M）、日（d）、星期（EEEE/EEE）、时（H/h）、分（m）、秒（s）、毫秒（.sss），也可以组合到一起使用。
+		3、filter 在给定数组中选择满足条件的一个子集，并返回一个新数组，其条件可以是一个字符串、对象、函数
+		4、json 将Javascrip对象转成JSON字符串。
+		5、limitTo 取出字符串或数组的前（正数）几位或后（负数）几位
+		6、lowercase 将文本转换成小写格式
+		7、uppercase 将文本转换成大写格式
+		8、number 数字格式化，可控制小位位数
+		9、orderBy 对数组进行排序，第2个参数可控制方向
+			eg:
+				<body ng-app="App">
+					<ul ng-controller="DemoController">
+						<li>{{price|currency:'￥'}}</li>
+						<li>{{now|date:'yyyy/MM/dd hh:mm:ss'}}</li>
+						<li>{{items|filter:'s'}}</li>
+						<li>{{students|filter:{age: 16} }}</li>
+						<li>{{students|json}}</li>
+						<li>{{items|limitTo:-1}}</li>
+						<li>{{str|uppercase|limitTo:3}}</li>
+						<li>{{str|lowercase}}</li>
+						<li>{{num|number:2}}</li>
+						<li>{{items|orderBy: '':true}}</li>
+						<li>{{students|orderBy: 'age': false}}</li>
+					</ul>
+					<script src="./libs/angular.min.js"></script>
+					<script>
+						var App = angular.module('App', []);
+						App.controller('DemoController', ['$scope', function ($scope) {
+							$scope.price = 11.11;
+							$scope.now = new Date;
+							$scope.items = ['html', 'css', 'js'];
+							$scope.students = [
+								{name: '小红', age: 16},
+								{name: '小明', age: 16},
+								{name: '小米', age: 10}
+
+							];
+							$scope.str = 'hello Angular';
+							$scope.num = '10.2345';
+						}]);
+						// var str = '10.5a';
+						// alert(Number(str));
+					</script>
+				</body>
+	
+	2)自定义过滤器
+		通过模块对象实例提供的filter方法自定义过滤器。
+			eg:
+				<body ng-app="App">
+					<div ng-controller="DemoController">
+						<h4>{{info|capitalize:123}}{{name}}</h4>
+					</div>
+					<script src="./libs/angular.min.js"></script>
+					<script>		
+						var App = angular.module('App', []);
+						// 自定义指令的
+						App.directive('name', function () {
+							return {
+								// 
+							}
+						});
+						// 自定义过滤器
+						App.filter('demo', function () {
+							return function (input) {
+								console.log('hello' + input);
+
+								return 'hello' + input;
+							}
+						});
+						App.filter('capitalize', function () {
+							// console.log(input);
+							return function (input, arg2) {
+								// console.log(arg2);
+								return input[0].toUpperCase() + input.slice(1);
+							}
+						});
+						// 自定义控制器的
+						App.controller('DemoController', ['$scope', function ($scope) {
+							$scope.name = '小明';
+							$scope.info = 'my name is ';
+						}]);
+					</script>
+				</body>
+
+7.依赖注入
+	依赖注入是指在运行时自动查找依赖关系，然后将查找到依赖传递给使用者的一种机制。
+	常见的AngularJS内置服务有$http、$location、$timeout、$rootScope等
+		1)推断式注入
+			没有明确声明依赖，AngularJS会将函数参数名称当成是依赖的名称。这种方式会带来一个问题，当代码经过压缩后函数的参数被压缩，这样便会造成依赖无法找到。
+				eg:
+					var App = angular.module('App', []);
+					// AngularJS 内置一些具有特殊功能的“模块”
+					// 开发者在开发的时候可以直接使用这些“模块”
+					// 推断式依赖注入
+					App.controller('DemoController', function ($scope, $http) {
+
+					});
+
+		2)行内注入(推荐使用)
+			以数组形式明确声明依赖，数组元素都是包含依赖名称的字符串，数组最后一个元素是依赖注入的目标函数。
+				eg:
+						var App = angular.module('App', []);
+						// 行内式注入
+						App.controller('DemoController', ['$scope', '$http', function (abc, bcd) {
+							abc.name = '依赖注入';
+
+						}]);
+
+8.服务
+	服务是一个对象或函数，对外提供特定的功能.
+	1)内置服务
+		1、$location是对原生Javascript中location对象属性和方法的封装。
+			eg:
+				<dl ng-controller="DemoController">
+					<dt>{{title}}</dt>
+					<dd>absUrl: {{absUrl}}</dd>
+					<dd>url: {{url}}</dd>
+					<dd>host: {{host}}</dd>
+					<dd>search: {{search}}</dd>
+					<dd>hash: {{hash}}</dd>
+					<dd>protocol: {{protocol}}</dd>
+					<dd>port: {{port}}</dd>
+				</dl>
+				<script src="./libs/angular.min.js"></script>
+				<script>
+					var App = angular.module('App', []);
+					// $location内置服务
+					// AngularJS 专门提供了一个帮你获URL地址一个服务
+					App.controller('DemoController', ['$scope', '$location', function($scope, $location) {	
+						$scope.title = '学习$location服务';
+						// $location就是angularJS提前封装好的
+						// 提供获取地址相关信息的服务
+						// console.log($location);
+						$scope.absUrl = $location.absUrl();
+						$scope.url = $location.url();
+						$scope.host = $location.host();
+						$scope.search = $location.search();
+						$scope.hash = $location.hash();
+						$scope.protocol = $location.protocol();
+						$scope.port = $location.port();
+					}]);
+					for(var key in location) {
+						console.log(key + '=>' + location[key]);
+					}
+					// 地址是有若干部分组合成的
+					// http:// 协议
+					// www.baidu.com / 124.12.134.12 主机
+					// :8080 端口号
+					// #abc  锚点
+					// ?name=itcast&age=10 查询参数据(querystring)
+					// function Person(name, age) {
+					// 	this.name = name;
+					// 	this.age = age;
+					// 	this.singing = function () {
+					// 	}
+					// }
+					// var service = new Person();
+				</script>
+
+	2)自定义服务
+		所谓服务是将一些通用性的功能逻辑进行封装方便使用，AngularJS允许将自定义服务。
+		1、factory方法
+			<script>
+				var App = angular.module('App', []);
+				// 定义一个名叫showTime的服务
+				App.factory('showTime', ['$filter', function ($filter) {
+					// return function () {
+					// 	var now = new Date();
+					// 	var date = $filter('date');
+					// 	return date(now, 'y-M-d H:m:s');
+					// }
+					var now = new Date();
+					var date = $filter('date');
+					return {
+						now: date(now, 'y-M-d H:m:s')
+					}
+				}]);
+				App.controller('DemoController', ['$scope', 'showTime', function($scope, showTime) {
+					// $scope.now = showTime();
+					$scope.now = showTime.now;
+				}])
+			</script>
+		2、service方法
+			var App = angular.module('App', []);
+			// 自定义服务显示日期
+			App.service('showTime', ['$filter', function($filter) {
+				var now = new Date();
+				var date = $filter('date');
+				this.now = date(now, 'y-M-d H:mm:ss');
+			}]);
+			App.controller('DemoController', ['$scope', 'showTime', function($scope, showTime) {	
+				$scope.now = showTime.now;
+			}])
+		3、value方法定义常量
+			var App = angular.module('App', []);
+			// 自定义常量服务
+			App.value('author', 'itcast');
+			App.value('version', '1.0');
+			// 本质上一个服务
+			// 从表现形式上是一个常量
+			// 常量就是不变的值与变对量相对应
+			// 声明依赖调用服务
+			App.controller('DemoController', ['$scope', 'author', 'version', function($scope, author, version) {
+				$scope.author = author;
+				$scope.ver = version;
+			}]);
+
+9.模块加载
+	AngularJS模块可以在被加载和执行之前对其自身进行配置。我们可以在应用的加载阶段配置不同的逻辑。
+	1)配置块
+		1、通过config方法实现对模块的配置，AngularJS中的服务大部分都对应一个“provider”，用来执行与对应服务相同的功能或对其进行配置。
+		比如$log、$http、$location都是内置服务，相对应的“provider”分别是$logProvider、$httpProvider、$locationPorvider。
+		下图以$log为例进行演示，修改了配置
+			<body>
+				<div ng-controller="DemoController">
+					<h1>{{now}}</h1>
+					<h2>{{str|capitalize}}</h2>
+				</div>
+				<script src="./libs/angular.min.js"></script>
+				<script>
+					var App = angular.module('App', []);
+					// 配置$log服务(禁用debug)
+					// config
+					// 允许一次配置多个服务（块）
+					// 传递的一个数组（依赖注入方式）
+					App.config(['$logProvider', '$filterProvider', function ($logProvider, $filterProvider) {
+						// $log.debug();
+						// 禁用debug功能
+						$logProvider.debugEnabled(false);
+						// 默认9个过滤器，通过配置可以新增一些过滤器
+						$filterProvider.register('capitalize', function () {
+							// 新增一个过滤器
+							return function (input) {
+								return input[0].toUpperCase() + input.slice(1);
+							}
+						});
+					}]);
+					// App.config(['$filterProvider', function($filterProvider) {	
+							//默认9个过滤器，通过配置可以新增一些过滤器
+							//$filterProvider.register('capitalize', function () {
+							// 		return function (input) {
+							// 			return input[0].toUpperCase() + input.slice(1);
+							// 		}
+						// });
+					// }])
+					App.controller('DemoController', ['$scope', '$log', function ($scope, $log) {
+						// 测试配置后的结果
+						$log.debug('debug');
+						$scope.str = 'hello angular';
+					}]);
+				</script>
+			</body>
+
+	2)运行块
+		服务也是模块形式存在的对且对外提供特定功能，前面学习中都是将服务做为依赖注入进去的，然后再进行调用，除了这种方式外我们也可以直接运行相应的服务模块，AngularJS提供了run方法来实现。
+			<body>
+				<div ng-controller="DemoController">
+					{{name}}
+				</div>
+				<script src="./libs/angular.min.js"></script>
+				<script>
+					var App = angular.module('App', []);
+					// 直接运行$http、$rootScope服务
+					// $rootScope根作域
+					App.run(['$http', '$rootScope', function ($http, $rootScope) {
+						// 直接调用$http
+						$http({
+							url: 'example.php',
+							method: 'get'
+						});
+						// 根作用域
+						$rootScope.name = '祖宗';
+					}]);
+					App.controller('DemoController', ['$scope', function($scope) {
+						//
+						// 
+						$scope.name = '后代';
+					}]) 
+				</script>
+			</body>
+		不但如此，run方法还是最先执行的，利用这个特点我们可以将一些需要优先执行的功能通过run方法来运行，比如验证用户是否登录，未登录则不允许进行任何其它操作。
+		注：此知识点意在了解AngularJS的加载机制。
+
+10.路由
+	一个应用是由若个视图组合而成的，根据不同的业务逻辑展示给用户不同的视图，路由则是实现这一功能的关键。
+	1)SPA
+		SPA（Single Page Application）指的是通单一页面展示所有功能，通过Ajax动态获取数据然后进行实时渲染，结合CSS3动画模仿原生App交互，然后再进行打包（使用工具把Web应用包一个壳，这个壳本质上是浏览器）变成一个“原生”应用。
+		在PC端也有广泛的应用，通常情况下使用Ajax异步请求数据，然后实现内容局部刷新，局部刷新的本质是动态生成DOM，新生成的DOM元素并没有真实存在于文档中，所以当再次刷新页面时新添加的DOM元素会“丢失”，通过单页面应可以很好的解决这个问题。
+
+	2)路由
+		在后端开发中通过URL地址可以实现页面（视图）的切换，但是AngularJS是一个纯前端MVC框架，在开发单页面应用时，所有功能都在同一页面完成，所以无需切换URL地址（即不允许产生跳转），但Web应用中又经常通过链接（a标签）来更新页面（视图），当点击链接时还要阻止其向服务器发起请求，通过锚点（页内跳转）可以实现这一点。
+		实现单页面应用需要具备：
+			a、只有一页面
+			b、链接使用锚点
+			eg:
+				<body>
+					<div class="wrapper">
+						<!-- 导航菜单 -->
+						<ul>
+							<li class="active">
+								<a href="#index">Index</a>
+							</li>
+							<li>
+								<a href="#introduce">Introduce</a>
+							</li>
+							<li>
+								<a href="#contact">Contact Us</a>
+							</li>
+						</ul>
+						<!-- 内容 -->
+						<div class="content">
+							Index Page
+						</div>
+					</div>
+					<script>
+						// 监听锚点变化然后发送请求
+						// hashchange事件可以监听锚点变化
+						window.addEventListener('hashchange', function () {
+							// console.log(1);
+							// 获取锚点
+							var hash = location.hash;
+							// 处理#
+							hash = hash.slice(1);
+							// 实例对象
+							var xhr = new XMLHttpRequest;
+							// 将锚点做为参数传递给服务端进处理
+							xhr.open('get', '10-01.php?hash=' + hash);
+							xhr.send(null);
+							xhr.onreadystatechange = function () {
+								if(xhr.readyState == 4 && xhr.status == 200) {
+									var result = xhr.responseText;
+									// 将返回结果添加到页面
+									document.querySelector('.content').innerHTML = result;
+								}
+							}
+						});
+					</script>
+				</body>
+		通过上面的例子发现在单一页面中可以能过hashchange事件监听到锚点的变化，进而可以实现为不同的锚点准不同的视图，单页面应用就是基于这一原理实现的。
+		AngularJS对这一实现原理进行了封装，将锚点的变化封装成路由（Route）,这是与后端路由的根本区别。
+
+	3)angular-route.js10.2.1使用
+		a.引入angular-route.js
+		b.实例化模块（App）时，当成依赖传进去（模块名称叫ngRoute）。
+		c.配置路由模块
+		d.布局模板:通过ng-view指令布局模板，路由匹配的视图会被加载渲染到些区域。
+			<body>
+				<div class="wrapper">
+					<!-- 导航菜单 -->
+					<ul>
+						<li class="active">
+							<a href="#/index">Index</a>
+						</li>
+						<li>
+							<a href="#/introduce">Introduce</a>
+						</li>
+						<li>
+							<a href="#/contact">Contact Us</a>
+						</li>
+						<li>
+							<a href="#/list">List</a>
+						</li>
+					</ul>
+					<!-- 内容 -->
+					<div class="content">
+						<!-- 占位符 -->
+						<!-- 视图会被加载并渲染到此处-->
+						<div ng-view></div>
+					</div>
+				</div>
+				<!-- AngularJS核心框架 -->
+				<script src="./libs/angular.min.js"></script>
+				<!-- 路由模块理解成插件 -->
+				<script src="./libs/angular-route.js"></script>
+				<script>
+					// 依赖ngRoute模块
+					var App = angular.module('App', ['ngRoute']);
+					// 需要对路由模块进行配置，使其正常工作
+					App.config(['$routeProvider', function ($routeProvider) {
+						$routeProvider.when('/index', {
+							// template: '<h1>index Pages!</h1>',
+							templateUrl: './abc.html'
+						})
+						.when('/introduce', {
+							template: '<h1>introduce Pages!</h1>'
+						})
+						.when('/contact', {
+							// template: '<h1>contact US Pages!</h1>',
+							templateUrl: './contact.html',
+							controller: 'ContactController' // 定义控制器
+						})
+						.when('/list', {
+							templateUrl: './list.html', // 视图模板
+							controller: 'ListController' // 定义控制器
+						})
+						.otherwise({
+							redirectTo: '/index'
+						});
+					}]);
+					// 列表控制器
+					App.controller('ListController', ['$scope', '$http', function ($scope, $http) {
+						// 模型数据
+						// $scope.items = ['html', 'css', 'js'];
+						$http({
+							url: '10-02.php',
+						}).success(function (info) {
+							// console.log(info);
+							$scope.items = info;
+						});
+					}]);
+					App.controller('ContactController', ['$scope', '$http', function ($scope, $http) {
+						$http({
+							url: 'contact.php'
+						}).success(function (info) {
+							$scope.content = info;
+						});
+					}]);
+				</script>
+			</body>
+	
+	4)路由参数
+		1、提供两个方法匹配路由，分别是when和otherwise，when方法需要两个参数，otherwise方法做为when方法的补充只需要一个参数，其中when方法可以被多次调用。
+		2、第1个参数是一个字符串，代表当前URL中的hash值。
+		3、第2个参数是一个对象，配置当前路由的参数，如视图、控制器等。
+			a、template 字符串形式的视图模板
+			b、templateUrl 引入外部视图模板
+			c、controller 视图模板所属的控制器
+			d、redirectTo跳转到其它路由
+		4、获取参数，在控制中注入$routeParams可以获取传递的参数
+			eg:
+				// url地址
+				// http://localhost/angularjs/index.html#/index/10
+				// 得到结果为{id: 10}
+				.when('/index/:id', { //路由规则
+					template: 'index page',
+					controller: 'IndexController'
+				});
+				App.controller('IndexController', ['$scope', '$routeParams', function ($scope, $routeParams) {
+					// 在控制器使用$routeParams获取参数
+					console.log($routeParams);
+				}]);
+
+11.其它
+	1)jQuery
+		在没有引入jQuery的前提下AngularJS实现了简版的jQuery Lite，通过angular.element不能选择元素，但可以将一个DOM元素转成jQuery对象，如果提前引入了jQuery则angular.element则完全等于jQuery。
+	
+	2)bower
+		基于NodeJS的一个静态资源管理工具，由twitter公司开发维护，解决大型网站中静态资源的依赖问题。
+			1、依赖NodeJS环境和git工具。
+			2、npm install -g bower --registry=https://registry.npm.taobao.org安装bower
+			3、bower search 查找资源信息
+			4、bower install  安装（下载）资源，通过#号可以指定版本号
+			5、bower info 查看资源信息
+			6、bower uninstall 卸载（删除）资源
+			7、bower init初始化（在windows下只能使用cmd来操作），用来记录资源信息及依赖。
