@@ -61,12 +61,12 @@
 		键盘修饰符
 		v-on:eventTtype.键盘修饰符=''
 		鼠标按钮修饰符
-		v-on:eventType.left/middle/tight=''
+		v-on:eventType.left/middle/right=''
 	数组更新检测
 		变异方法(能改变原数组的方法)：引起视图更新
 		替换数组：不引起试图更新
 	
-	计算属性
+	计算属性(注意使用时不要带上括号)
 		computed
 		与methods的区别：computed会缓存相关依赖的结果，当computed中的方法不发生任何改变时，不会重新计算，而methods中的方法每一次都会计算
 	
@@ -75,6 +75,7 @@
 
 		<template>
 			<input type='text' v-model='msg'>
+			{{msg}} //此处实时显示表单输入内容
 		</template>
 		<script>
 			export default {
@@ -86,19 +87,21 @@
 				},
 				watch: {
 					msg(data) {
-						console.log(data);
+						console.log(data); //实时监听内容变化
 					}
 				}
 			}
 			注意三者msg名称的一致性
-		修饰符
+		修饰符(对输入内容进行限制)
 		v-model.lazy
 		v-model.number
 		v-model.trim
 
 	class与style绑定
 		绑定html class
-		v-bind:class='{}'
+		v-bind:class='{类名:布尔值}'
+		:class = ['跟类名名称一样的数据']
+		:class = '含有类名的数据对象'
 		数组语法
 		内联样式
 		v-bind:sytle='{}'
@@ -280,7 +283,7 @@
 			</style>
 	3.插槽slot和缓存
 		单个插槽
-		具名插槽: 传递多个插槽接收时可以用一个容器接收
+		具名插槽: 传递多个插槽接收时可以用一个父容器接收
 		作用域插槽：数据是子组件传递给父组件，与父组件传子组件的props过程相反
 			注意： 在2.5.0之前，必须使用在template上
 		parent.vue:
@@ -289,7 +292,7 @@
 					<son>
 						<!-- 不具名插槽 -->
 						<p>i am the slot.</p>
-						<!-- 具名插槽 -->
+						<!-- 具名插槽slot = '名称' 作用域插槽slot-scope='一个对象'-->
 						<p slot='named' slot-scope='obj'>i am the named {{obj.title}}.</p>
 					</son>
 				</div>
@@ -318,7 +321,7 @@
 					<slot>
 						<p>如果不传递数据则显示</p>
 					</slot>
-					<!-- 具名插槽 -->
+					<!-- 具名插槽 name = '父组件里插槽的名称'-->
 					<slot name='named' :title='msg'>传递数据</slot>
 				</div>
 			</template>
@@ -439,7 +442,7 @@
 			</style>
 
 #动画与过渡
-	注意：所有动画都是浮动的，所以会导致产生底部滚动条，用绝对定位解决
+	注意：所有动画都是浮动的，所以会导致产生底部滚动条，可以用绝对定位解决
 	1.在css过渡和动画中自动应用class
 		过渡:
 		v-enter: 开始
@@ -568,7 +571,7 @@
 				}
 			},
 			created() {
-				//get request
+				//get request(default)
 				this.$axios('url',{params: {type: '',count: }}).then((res) => {
 					console.log(res);
 					}).catch((error) => {
@@ -585,7 +588,7 @@
 							})
 			}
 		}
-		注意：axios接受的post请求参数的格式是form-data格式
+		注意：axios接受的post请求参数的格式是form-data格式,引入qs模块对其进行处理
 	4.拦截器：作用是对发送数据和响应结果进行检查，以保证数据正确
 
 #跨域解决方法: 只适用于测试阶段
@@ -603,7 +606,7 @@
   2.在main.js文件中添加以下内容：
    	Vue.prototype.HOST = 'api';
   3.在axios请求中重新修改地址：
-   	url: this.HOST + ''
+   	url: this.HOST + 'xxx'
 
 #mock: 数据模拟
 	1.自己创建json文件，使用get请求形式访问数据
@@ -638,7 +641,7 @@
 		var router = new Router({
 			routes: {
 				path: 'url',
-				component: 
+				component: '对应的组件'
 			}
 		});
 		以上内容一般提取到另外一个js文件对路由进行集中管理，再在主文件(main.js)中引入，并挂载到vue实例上
@@ -676,7 +679,7 @@
 		})
 	7)路由传递参数
 		<router-link :to='{name:'组件名称' ,params:{num: 123}}'></router-link>
-		获取参数：$toute.params.num
+		获取参数：$route.params.num
 		<router-link :to='{path:'url' ,query:{num: 123}}'></router-link>
 	8)路由高亮效果
 		在router-link标签中添加exact属性，使得该链接在当前页面时处于激活状态
@@ -847,7 +850,7 @@
 			</script>
 
 #vue-lazyload
-	1)安装：npm install vue-lazylaod -D
+	1)安装：npm install vue-lazyload -D
 	2)引入
 		在mian.js中
 			import Vue from 'vue'
@@ -909,7 +912,7 @@
 		在index.html的script标签中添加以下代码
 		(function(doc, win) {
 			var docEl = doc.documentElement,
-					resizeEvt = 'orientationchange' in window? 'orientationchange': 'resize',
+					resizeEvt = 'orientationchange' in window? 'orientationchange': 'recalc',
 					recalc = function() {
 						var clientWidth = docEl.clientWidth;
 						if(!clientWidth) return;
@@ -991,3 +994,7 @@
 		删除无用内容
 	6)修改输出
 		修改mian.js文件，输出自己的组件
+
+#vue-resource
+	After vue 2.0 , it stop updating.
+
